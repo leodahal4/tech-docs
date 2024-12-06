@@ -3,12 +3,13 @@ import vue from '@vitejs/plugin-vue'
 import Markdown from 'vite-plugin-md'
 
 export default defineConfig({
+  // Use the repository name as the base path
+  base: '/tech-docs/
   plugins: [
     vue({
       include: [/\.vue$/, /\.md$/],
     }),
     Markdown({
-      // markdown-it options
       markdownItOptions: {
         html: true,
         linkify: true,
@@ -16,5 +17,16 @@ export default defineConfig({
       },
     }),
   ],
-  base: '/', // for GitHub Pages
+  build: {
+    assetsDir: './',
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        }
+      }
+    }
+  }
 })
